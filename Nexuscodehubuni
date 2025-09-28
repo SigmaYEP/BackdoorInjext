@@ -181,3 +181,28 @@ AntiFlingButton.MouseButton1Click:Connect(function()
         end
     end
 end)
+
+do
+local Players=game:GetService("Players")
+local LocalPlayer=Players.LocalPlayer
+pcall(function() LocalPlayer.Kick=function(...) return end end)
+pcall(function()
+if type(getrawmetatable)~='function' or type(newcclosure)~='function' or type(getnamecallmethod)~='function' or type(setreadonly)~='function' then error() end
+local mt=getrawmetatable(game)
+local old=mt.__namecall
+setreadonly(mt,false)
+mt.__namecall=newcclosure(function(self,...)
+local method=getnamecallmethod()
+if method=='Kick' or method=='kick' then
+return nil
+end
+return old(self,...)
+end)
+setreadonly(mt,true)
+end)
+pcall(function()
+if LocalPlayer and type(LocalPlayer.Kick)=='function' then
+LocalPlayer.Kick=function(...) return end
+end
+end)
+end
